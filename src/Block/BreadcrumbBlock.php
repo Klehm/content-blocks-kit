@@ -17,7 +17,7 @@ use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
  * empty url renders as plain text (the current page).
  */
 #[AsContentBlock(priority: 20)]
-class BreadcrumbBlock extends AbstractKitBlock
+final class BreadcrumbBlock extends AbstractKitBlock
 {
     public static function getType(): string
     {

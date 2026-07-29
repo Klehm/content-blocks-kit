@@ -20,7 +20,7 @@ use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
  * even if a row has fewer/more cells than columns.
  */
 #[AsContentBlock(priority: 15)]
-class TableBlock extends AbstractKitBlock
+final class TableBlock extends AbstractKitBlock
 {
     public static function getType(): string
     {

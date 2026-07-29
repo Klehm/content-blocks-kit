@@ -7,30 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- **BREAKING — `Block.data` key unification (road to v1.0).** The same concept
-  was stored under different keys across blocks; the stable release reconciles
-  them so the persisted schema is a coherent public contract. Renames:
-  - link / URL is now **`url`** everywhere: `image.link`, `gallery` item `link`,
-    `button.href`, `card` item `buttonUrl` → `url`.
-  - `card` item `buttonLabel` → **`buttonText`**.
-  - `alert.message` → **`content`**.
-  - `tabs.tabs` (collection wrapper) → **`items`** (consistent with every other
-    collection block).
-  - `table` column `align` values `left`/`right` → **`start`**/**`end`** (matching
-    the `start/center/end` vocabulary used by image/button/icon; `center` unchanged).
-
-  Existing rows must be migrated — see the reference Doctrine migration
-  `Version20260715120000` in both sandboxes (decode → rename → encode, reversible,
-  handles nested collection items). Host `content_blocks_kit.blocks.<type>.defaults`
-  / `choices` config keyed by an old field name must be updated to the new name.
-
-  Accepted (documented) exceptions, not renamed: `title` block keeps `text` for its
-  heading content (composite blocks use `title` for a sub-heading — different role);
-  `icon.size` stays an integer (px) while `size` elsewhere is an enum; `src`/`fit`
-  keep their conventional HTML/CSS spellings.
-
 ## [0.1.0-beta.7] - 2026-07-10
 
 ### Added
@@ -69,17 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and **`EmbedExtension`** (`cb_embed_url()`, YouTube/Vimeo).
 - Kit now has its own PHPUnit + Vitest setup (path repository to the sibling
   core so it tests against the monorepo's current core), gating the split.
-
-### Fixed
-
-- **The bundle could not boot on a Webpack Encore host.** `prependExtension()`
-  registered `assets/` under `framework.asset_mapper.paths` unconditionally, which
-  *enables* a component the kit never required — `FrameworkExtension` then threw at
-  container build. Now guarded by `class_exists()`, same as the core bundle. Encore
-  hosts link the kit's assets as a local npm package
-  (`@klehm/content-blocks-kit@file:vendor/klehm/content-blocks-kit/assets`) and read
-  `cb-tinymce` / `cb-gallery` from `assets/package.json` through
-  `@symfony/stimulus-bridge`.
 
 ### Changed
 

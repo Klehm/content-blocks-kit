@@ -15,7 +15,7 @@ use Symfony\Contracts\Translation\TranslatableInterface;
  * trusted editors (all mutations pass the host's canEdit() gate).
  */
 #[AsContentBlock(priority: 5)]
-class HtmlRawBlock extends AbstractKitBlock
+final class HtmlRawBlock extends AbstractKitBlock
 {
     public static function getType(): string
     {
