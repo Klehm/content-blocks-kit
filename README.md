@@ -12,7 +12,7 @@ shipped stylesheet, so it drops into any host regardless of its CSS setup.
 |---|---|
 | `title` | Heading with visual size, semantic tag, and palette text color |
 | `text` | Plain paragraph text with palette text color |
-| `rich_text` | WYSIWYG (TinyMCE) rich text |
+| `rich_text` | WYSIWYG rich text, on TinyMCE or CKEditor (`options.editor`) |
 | `image` | Image with size preset / custom size, fit, align, link, caption, rounded corners |
 | `gallery` | Image grid or slider (arrows) with columns, fit, rounded corners |
 | `button` | Call-to-action button (variants, sizes, alignment) |
@@ -53,8 +53,8 @@ your own stylesheet loaded after it.
 ### Stimulus controllers
 
 Enable the kit's controllers in your host `assets/controllers.json` under the
-`@klehm/content-blocks-kit` package: `cb-tinymce` (rich text) and `cb-gallery`
-(gallery slider).
+`@klehm/content-blocks-kit` package: `cb-tinymce` / `cb-ckeditor` (rich text —
+whichever editor you selected) and `cb-gallery` (gallery slider).
 
 ## Configuring blocks
 
@@ -137,9 +137,28 @@ Drop a file at the matching relative path under `templates/bundles/ContentBlocks
 # config/packages/content_blocks.yaml
 content_blocks:
     upload:
-        dir: '%kernel.project_dir%/public/uploads/content-blocks'
+        directory: '%kernel.project_dir%/public/uploads/content-blocks'
         public_prefix: '/uploads/content-blocks'
 ```
+
+A file can be picked from the dialog or dropped anywhere on the field — both go
+through the same endpoint and the same limits.
+
+## Image optimization
+
+The kit stays dependency-free, so it serves an uploaded file as stored and only
+controls its *display* box (width/height, `object-fit`, `loading="lazy"`). Every
+image it renders — `image`, `gallery` items, `card` media — goes through the
+core's `ImageUrlResolverInterface`, whose default returns the source untouched.
+
+Alias that interface in your app (to a CDN URL builder, a LiipImagine bridge…)
+and the three views emit `srcset`/`sizes` with no template override. The `image`
+block hands the resolver the display width it computed (sm=400, md=800, lg=1200,
+or the custom width) — exactly what a resizing resolver needs.
+
+Worked example, compression and WebP included:
+[Compress and convert images](../../docs/guide/recipes/liip-imagine.md). Seam
+reference: [Host services](../../docs/guide/host-services.md).
 
 ## Documentation & contributing
 
